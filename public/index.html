@@ -1,0 +1,96 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Socket IO</title>
+</head>
+<body>
+	<input type="text" id="mssg" class="mssg" />
+	<button id="btn">connect to socket</button>
+
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="socket.io.js"></script>
+	<script>
+
+	$(function(){
+
+		function getRandomInt (min, max) {
+    		return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		function connect( mssg ) {
+		//var connect = function(){
+			var socket = io.connect('http://localhost:8888');
+			var rand = null;
+			// socket.emit('ReadyEvent', { status : mssg});
+
+			//socket.on('news', function (data) {
+
+			function addRandom( data ) {
+				rand = {
+					r1 : getRandomInt( data.f1, data.t1 ),
+					r2 : getRandomInt( data.f2, data.t2 )
+				}
+
+				socket.emit('CheckEvent', { 
+					rand1 : rand.r1,
+					rand2 : rand.r2
+				});
+			}
+
+			socket.on('CalcRandom', function(data){
+				_data = data;
+				addRandom( data );
+			});
+
+			socket.on('ResultEvent', function(res){
+				if( !res ) {
+					addRandom( _data );
+				} else {
+					console.log( rand, "bereist vorhanden");
+				}
+			});
+
+			socket.on('ListDbEvent', function(data) {
+				var i=0,
+					l=data.length,
+					val;
+					for( i; i < l; i++ ) {
+						val = data[i];
+						if( val.rand1 === rand.r1 && val.rand2 === rand.r2 ) {
+							console.log( "index: " + i);
+						}
+					}	
+
+				console.log( data );
+
+			});
+
+			//console.log(data);
+
+			//});
+
+			$('#btn').click(function(event){
+				socket.emit('GetDbEvent');
+			// $('#btn').on('click', function(event){
+			// 	var input = $('#mssg').val();
+			// 	console.log( input );
+			// 	connect(  input );
+			});
+			
+		} // connect
+
+		connect();
+
+
+
+
+
+	});
+
+
+
+
+	</script>
+</body>
+</html>
+

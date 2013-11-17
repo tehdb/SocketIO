@@ -1,0 +1,13 @@
+{
+  "name": "SockeIO",
+  "version": "0.0.0",
+  "description": "blabla",
+  "dependencies": {
+    "component": "~0.18.0",
+    "express": "~3.4.4",
+    "socket.io": "~0.9.16",
+    "socket.io-client": "~0.9.16"
+  },
+  "author": "",
+  "license": "BSD-2-Clause"
+}
